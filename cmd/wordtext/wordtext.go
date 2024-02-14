@@ -1,32 +1,24 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
-// wordtextCmd represents the wordtext command
-var wordtextCmd = &cobra.Command{
+// WordtextCmd represents the wordtext command
+var WordtextCmd = &cobra.Command{
 	Use:   "wordtext",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Word Text is a palette for word document related commands.",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("wordtext called")
+		cmd.Help()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(wordtextCmd)
+	rootCmd.AddCommand(WordtextCmd)
 
 	// Here you will define your flags and configuration settings.
 
