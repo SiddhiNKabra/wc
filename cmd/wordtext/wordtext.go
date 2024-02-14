@@ -18,7 +18,6 @@ var WordtextCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(WordtextCmd)
 
 	// Here you will define your flags and configuration settings.
 
