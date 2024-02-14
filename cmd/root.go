@@ -34,7 +34,7 @@ func Execute() {
 }
 
 func AddSubCommandPalette() {
-	rootCmd.AddCommand(WordtextCmd)
+	rootCmd.AddCommand(wordtext.WordtextCmd)
 }
 
 func init() {
