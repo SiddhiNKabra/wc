@@ -3,97 +3,100 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 func main() {
-	// cmd.Execute()
 	var rootCmd = &cobra.Command{Use: "wordtext"}
 
-    var linesCmd = &cobra.Command{
-        Use:   "lines [file]",
-        Short: "Count lines in a file",
-        Run: func(cmd *cobra.Command, args []string) {
-            file, err := os.Open(args[0])
-            if err != nil {
-                fmt.Println("Error:", err)
-                return
-            }
-            defer file.Close()
+	var linesCmd = &cobra.Command{
+		Use:   "lines",
+		Short: "Count lines in a file",
+		Run: func(cmd *cobra.Command, args []string) {
+			file := args[0]
+			countLines(file)
+		},
+	}
 
-            scanner := bufio.NewScanner(file)
-            lineCount := 0
-            for scanner.Scan() {
-                lineCount++
-            }
-            fmt.Println("Lines:", lineCount)
-        },
-    }
+	var wordsCmd = &cobra.Command{
+		Use:   "words",
+		Short: "Count words in a file",
+		Run: func(cmd *cobra.Command, args []string) {
+			file := args[0]
+			countWords(file)
+		},
+	}
 
-    var wordsCmd = &cobra.Command{
-        Use:   "words [file]",
-        Short: "Count words in a file",
-        Run: func(cmd *cobra.Command, args []string) {
-            file, err := os.Open(args[0])
-            if err != nil {
-                fmt.Println("Error:", err)
-                return
-            }
-            defer file.Close()
+	var charactersCmd = &cobra.Command{
+		Use:   "characters",
+		Short: "Count characters in a file",
+		Run: func(cmd *cobra.Command, args []string) {
+			file := args[0]
+			countCharacters(file)
+		},
+	}
 
-            scanner := bufio.NewScanner(file)
-            wordCount := 0
-            for scanner.Scan() {
-                words := strings.Fields(scanner.Text())
-                wordCount += len(words)
-            }
-            fmt.Println("Words:", wordCount)
-        },
-    }
+	rootCmd.AddCommand(linesCmd, wordsCmd, charactersCmd)
 
-    var charactersCmd = &cobra.Command{
-        Use:   "characters [file]",
-        Short: "Count characters in a file",
-        Run: func(cmd *cobra.Command, args []string) {
-            file, err := os.Open(args[0])
-            if err != nil {
-                fmt.Println("Error:", err)
-                return
-            }
-            defer file.Close()
+	rootCmd.PersistentFlags().StringP("file", "f", "", "Input file")
 
-            scanner := bufio.NewScanner(file)
-            charCount := 0
-            for scanner.Scan() {
-                charCount += len(scanner.Text())
-            }
-            fmt.Println("Characters:", charCount)
-        },
-    }
+	rootCmd.Execute()
+}
 
-    rootCmd.AddCommand(linesCmd, wordsCmd, charactersCmd)
+func countLines(file string) {
+	// Open the file
+	f, err := os.Open(file)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	defer f.Close()
 
-    rootCmd.Flags().BoolP("lines", "l", false, "Count lines")
-    rootCmd.Flags().BoolP("words", "w", false, "Count words")
-    rootCmd.Flags().BoolP("characters", "c", false, "Count characters")
+	// Count lines
+	scanner := bufio.NewScanner(f)
+	lineCount := 0
+	for scanner.Scan() {
+		lineCount++
+	}
+	fmt.Println("Lines:", lineCount)
+}
 
-    rootCmd.Run = func(cmd *cobra.Command, args []string) {
-        lines, _ := cmd.Flags().GetBool("lines")
-        words, _ := cmd.Flags().GetBool("words")
-        characters, _ := cmd.Flags().GetBool("characters")
+func countWords(file string) {
+	// Open the file
+	f, err := os.Open(file)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	defer f.Close()
 
-        if lines {
-            linesCmd.Run(cmd, args)
-        }
-        if words {
-            wordsCmd.Run(cmd, args)
-        }
-        if characters {
-            charactersCmd.Run(cmd, args)
-        }
-    }
+	// Count words
+	scanner := bufio.NewScanner(f)
+	wordCount := 0
+	for scanner.Scan() {
+		words := strings.Fields(scanner.Text())
+		wordCount += len(words)
+	}
+	fmt.Println("Words:", wordCount)
+}
 
-    rootCmd.Execute()
+func countCharacters(file string) {
+	// Open the file
+	f, err := os.Open(file)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	defer f.Close()
+
+	// Count characters
+	scanner := bufio.NewScanner(f)
+	charCount := 0
+	for scanner.Scan() {
+		charCount += len(scanner.Text())
+	}
+	fmt.Println("Characters:", charCount)
 }
