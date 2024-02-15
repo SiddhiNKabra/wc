@@ -13,45 +13,73 @@ func main() {
 	var rootCmd = &cobra.Command{Use: "wordtext"}
 
 	var linesCmd = &cobra.Command{
-		Use:   "lines [file]",
+		Use:   "lines",
 		Short: "Count lines in a file",
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) != 1 {
-				fmt.Println("Please provide a file path.")
+			file, err := cmd.Flags().GetString("file")
+			if err != nil {
+				fmt.Println("Error:", err)
 				return
 			}
-			file := args[0]
+			if file == "" {
+				fmt.Println("Please provide a file path using -f or --file flag.")
+				return
+			}
 			countLines(file)
 		},
 	}
 
 	var wordsCmd = &cobra.Command{
-		Use:   "words [file]",
+		Use:   "words",
 		Short: "Count words in a file",
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) != 1 {
-				fmt.Println("Please provide a file path.")
+			file, err := cmd.Flags().GetString("file")
+			if err != nil {
+				fmt.Println("Error:", err)
 				return
 			}
-			file := args[0]
+			if file == "" {
+				fmt.Println("Please provide a file path using -f or --file flag.")
+				return
+			}
 			countWords(file)
 		},
 	}
 
 	var charactersCmd = &cobra.Command{
-		Use:   "characters [file]",
+		Use:   "characters",
 		Short: "Count characters in a file",
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) != 1 {
-				fmt.Println("Please provide a file path.")
+			file, err := cmd.Flags().GetString("file")
+			if err != nil {
+				fmt.Println("Error:", err)
 				return
 			}
-			file := args[0]
+			if file == "" {
+				fmt.Println("Please provide a file path using -f or --file flag.")
+				return
+			}
 			countCharacters(file)
 		},
 	}
+	var bytesCmd = &cobra.Command{
+		Use:   "bytes",
+		Short: "Count bytes in a file",
+		Run: func(cmd *cobra.Command, args []string) {
+			file, err := cmd.Flags().GetString("file")
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			if file == "" {
+				fmt.Println("Please provide a file path using -f or --file flag.")
+				return
+			}
+			countBytes(file)
+		},
+	}
 
-	rootCmd.AddCommand(linesCmd, wordsCmd, charactersCmd)
+	rootCmd.AddCommand(linesCmd, wordsCmd, charactersCmd, bytesCmd)
 
 	rootCmd.PersistentFlags().StringP("file", "f", "", "Input file")
 
@@ -111,4 +139,22 @@ func countCharacters(file string) {
 		charCount += len(scanner.Text())
 	}
 	fmt.Println("Characters:", charCount)
+}
+
+func countBytes(file string) {
+	f, err := os.Open(file)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	defer f.Close()
+
+	fileInfo, err := f.Stat()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	byteCount := fileInfo.Size()
+	fmt.Println("Bytes:", byteCount)
 }
