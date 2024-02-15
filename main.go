@@ -13,27 +13,39 @@ func main() {
 	var rootCmd = &cobra.Command{Use: "wordtext"}
 
 	var linesCmd = &cobra.Command{
-		Use:   "lines",
+		Use:   "lines [file]",
 		Short: "Count lines in a file",
 		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) != 1 {
+				fmt.Println("Please provide a file path.")
+				return
+			}
 			file := args[0]
 			countLines(file)
 		},
 	}
 
 	var wordsCmd = &cobra.Command{
-		Use:   "words",
+		Use:   "words [file]",
 		Short: "Count words in a file",
 		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) != 1 {
+				fmt.Println("Please provide a file path.")
+				return
+			}
 			file := args[0]
 			countWords(file)
 		},
 	}
 
 	var charactersCmd = &cobra.Command{
-		Use:   "characters",
+		Use:   "characters [file]",
 		Short: "Count characters in a file",
 		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) != 1 {
+				fmt.Println("Please provide a file path.")
+				return
+			}
 			file := args[0]
 			countCharacters(file)
 		},
