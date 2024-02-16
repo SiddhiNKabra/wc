@@ -12,6 +12,23 @@ import (
 func main() {
 	var rootCmd = &cobra.Command{Use: "wordtext"}
 
+	var allCmd = &cobra.Command{
+		Use:   "all",
+		Short: "Count lines, words, characters, bytes in a file",
+		Run: func(cmd *cobra.Command, args []string) {
+			file, err := cmd.Flags().GetString("file")
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			if file == "" {
+				fmt.Println("Please provide a file path using -f or --file flag.")
+				return
+			}
+			countAll(file)
+		},
+	}
+
 	var linesCmd = &cobra.Command{
 		Use:   "l",
 		Short: "Count lines in a file",
@@ -79,7 +96,7 @@ func main() {
 		},
 	}
 
-	rootCmd.AddCommand(linesCmd, wordsCmd, charactersCmd, bytesCmd)
+	rootCmd.AddCommand(allCmd, linesCmd, wordsCmd, charactersCmd, bytesCmd)
 
 	rootCmd.PersistentFlags().StringP("file", "f", "", "Input file")
 
@@ -157,4 +174,11 @@ func countBytes(file string) {
 
 	byteCount := fileInfo.Size()
 	fmt.Println("Bytes:", byteCount)
+}
+
+func countAll(file string) {
+	countLines(file)
+	countWords(file)
+	countCharacters(file)
+	countBytes(file)
 }
